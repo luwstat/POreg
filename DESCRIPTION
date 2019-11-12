@@ -1,0 +1,10 @@
+Package: POreg
+Type: Package
+Title: Regression analysis of arbitrarily censored data under the proportional odds model
+Version: 0.1.0
+Author: Lu Wang and Lianming Wang
+Maintainer: Lu Wang <lw3@email.sc.edu>
+Description: Fits the semi-parametric maximum likelihood estimator for univariate arbitrarily censored data using EM algorithm.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
