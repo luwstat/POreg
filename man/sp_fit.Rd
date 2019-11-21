@@ -29,9 +29,15 @@ The EM algorithm converges when the sum of square of the difference in the param
 }
 \value{
 \item{beta}{Estimates of regression coefficients.}
-\item{spline_coef}{Estimates of spline coefficients.}
 \item{beta_se}{The standard errors of regression coefficients estimate.}
 \item{CI}{Confidence intervals for the regression coefficients.}
+\item{spline_coef}{Estimates of spline coefficients.}
+\item{knots}{The knots for I-spline.}
+\item{AIC}{The Akaike information criterion. }
+\item{BIC}{The Bayesian information criterion.}
+\item{Baseline_Surv}{Plot of the estimated baseline survival curve.}
+\item{Baseline_hazard}{Plot of the estimated baseline hazard rate curve.}
+\item{Baseline_odds}{Plot of the estimated baseline odds curve.}
 }
 \references{
 Lu Wang & Lianming Wang. Regression analysis of arbitrarily censored data under the proportional odds models
@@ -58,4 +64,4 @@ sp_fit(L = IR_diabetes[,'left'],R = IR_diabetes[,'right'],x = gender,order = 3,n
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ ~kwd1 }% use one of  RShowDoc("KEYWORDS")
-\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line
+\keyword{ ~kwd2 }% ONLY ONE keyword per line
