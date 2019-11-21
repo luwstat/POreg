@@ -3,6 +3,7 @@ sp_fit <- function(L,R,x,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-
 ###################Functions will be used in the EM algorithm###############
   library(nleqslv)
   library(Matrix)
+  library(ggplot2)
   if(equal_space == T){
     #the number of interior knots
     ik <- nknot-2
@@ -244,15 +245,32 @@ sp_fit <- function(L,R,x,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-
   CI_upper <- bt + 1.96*se_theta
   ci <- cbind(CI_lower,CI_upper)
 
-  list(beta = bt,spline_coef = gamanew,beta_se = se_theta, CI = ci, knots = knots )
+  #define function log??likelihood AND calculate AIC and BIC
+  llhd <- sum(log(((t(Ml)%*%gama) * exp(iv%*%bt)/( t(Il)%*%gama * exp(iv%*%bt) + 1 )^2 )^d_0 * (1 - 1/( t(Ir)%*%gama * exp(iv%*%bt) + 1 ))^(d_1) * ( 1/( t(Il)%*%gama * exp(iv%*%bt) + 1) - 1/( t(Ir)%*%gama * exp(iv%*%bt) + 1))^(d_2) * ( 1/( t(Il)%*%gama * exp(iv%*%bt) + 1) )^(d_3)))
+  AIC <- 2*(P+K) - 2*llhd
+  BIC <- (P+K)*log(n) - 2*llhd
+  #########################################################
+  # plots:odds, survival,hazard
+  ########################################################
+  #grids of time points
+  tgrids <- seq(0,mx,0.1)
+  #calculate baseline odds
+  b <- Ispline(tgrids,dgr,knots)
+  m <- Mspline(tgrids,dgr,knots)
+  odds <- t(as.matrix(gama)) %*% b
+  ff <- t(as.matrix(gama))%*%m
+
+  #check baseline hazard rate
+  hzd <- ff/(1+odds)
+  bsl_hz = ggplot() + geom_line(data = as.data.frame( cbind(tgrids,t(hzd) ) ),aes(tgrids,t(hzd) )) + labs(x="t",y="h(t)")
+  #check baseline odds
+  bsl_odds = ggplot() + geom_line(data = as.data.frame( cbind(tgrids,t(odds) ) ),aes(tgrids,t(odds) )) + labs(x="t",y="Baseline odds")
+  #check baseline survival
+  sur <- 1/(1+odds)
+  bsl_surv = ggplot() + geom_line(data = as.data.frame( cbind(tgrids,t(sur) ) ),aes(tgrids,t(sur) )) + labs(x="t",y="S(t)")
+
+  #Return the result
+  list(beta = bt,beta_se = se_theta, CI = ci, spline_coef = gama, knots = knots, AIC = AIC, BIC = BIC, Baseline_Surv = bsl_surv, Baseline_hazard = bsl_hz, Baseline_odds = bsl_odds )
 
 }
-
-
-
-
-
-
-
-
 
