@@ -27,6 +27,12 @@ The EM algorithm converges when the sum of square of the difference in the param
 }
 \value{
 \item{spline_coef}{Estimates of spline coefficients.}
+\item{knots}{The knots for I-spline.}
+\item{AIC}{The Akaike information criterion. }
+\item{BIC}{The Bayesian information criterion.}
+\item{Baseline_Surv}{Plot of the estimated baseline survival curve.}
+\item{Baseline_hazard}{Plot of the estimated baseline hazard rate curve.}
+\item{Baseline_odds}{Plot of the estimated baseline odds curve.}
 }
 \references{
 Lu Wang & Lianming Wang. Regression analysis of arbitrarily censored data under the proportional odds models
