@@ -1,4 +1,5 @@
-np_fit <- function(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9){
+np_fit <- function(L,R,order = 3,equal_space = T,nknot, myknots,diagnosis = TRUE,conv_cri = 1e-9){
+  library(ggplot2)
   if(equal_space == T){
     #the number of interior knots
     ik <- nknot-2
@@ -95,8 +96,8 @@ np_fit <- function(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9)
 
   #define function log??likelihood AND calculate AIC and BIC
   llhd <- sum(log(((t(Ml)%*%gama)/( t(Il)%*%gama + 1 )^2 )^d_0 * (1 - 1/( t(Ir)%*%gama + 1 ))^(d_1) * ( 1/( t(Il)%*%gama + 1) - 1/( t(Ir)%*%gama + 1))^(d_2) * ( 1/( t(Il)%*%gama + 1) )^(d_3)))
-  AIC <- 2*(P+K) - 2*llhd
-  BIC <- (P+K)*log(n) - 2*llhd
+  AIC <- 2*K - 2*llhd
+  BIC <- K*log(n) - 2*llhd
 
   #########################################################
   # plots:odds, survival,hazard
@@ -118,7 +119,30 @@ np_fit <- function(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9)
   sur <- 1/(1+odds)
   bsl_surv = ggplot() + geom_line(data = as.data.frame( cbind(tgrids,t(sur) ) ),aes(tgrids,t(sur) )) + labs(x="t",y="S(t)")
 
+  if(diagnosis == TRUE){
+    ####################### model diagnosis with logistic distribution ############################
+    epsl <- log(as.vector(t(as.matrix(gama))%*%Il))
+    epsr <- log(as.vector(t(as.matrix(gama))%*%Ir))
+
+    library(icenReg)
+    estR <- ic_np(cbind(epsl,epsr))
+    diplot <- plot(estR,ylab = "Survival function",xlab = "v")
+    curve(1-plogis(x,0,1),add = TRUE,col = "red")
+    legend(min(c(epsl,epsr)),0.2,legend = c('S(v)','S(v)_hat'), col = c('red','black'))
+    A <- getSCurves(estR)
+
+    jps <- c(A$Tbull_ints[,1],A$Tbull_ints[,2])
+    st1 <- A$S_curves$baseline[findInterval(jps,A$Tbull_ints[,1])]
+    st2 <- A$S_curves$baseline[findInterval(jps,A$Tbull_ints[,1])-1]
+    xx1 = (1-plogis(jps)) - st1
+    xx2 = (1-plogis(jps))- st2
+    STATISTIC <-  max(abs(c(xx1,xx2)))
+  }else{
+    STATISTIC = NULL
+    diplot = NULL
+  }
+
   #Return the result
-  list(spline_coef = gamanew,knots= knots, AIC = AIC, BIC = BIC,Baseline_Surv = bsl_surv, Baseline_hazard = bsl_hz, Baseline_odds = bsl_odds)
+  list(spline_coef = gamanew,knots= knots, AIC = AIC, BIC = BIC, SK_Statistic = STATISTIC,Baseline_Surv = bsl_surv, Baseline_hazard = bsl_hz, Baseline_odds = bsl_odds)
 
 }
