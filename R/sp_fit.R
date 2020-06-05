@@ -1,5 +1,5 @@
 
-sp_fit <- function(L,R,x,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9){
+sp_fit <- function(L,R,x,order = 3,equal_space = T,nknot, myknots, diagnosis = TRUE,conv_cri = 1e-9){
 ###################Functions will be used in the EM algorithm###############
   library(nleqslv)
   library(Matrix)
@@ -269,8 +269,31 @@ sp_fit <- function(L,R,x,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-
   sur <- 1/(1+odds)
   bsl_surv = ggplot() + geom_line(data = as.data.frame( cbind(tgrids,t(sur) ) ),aes(tgrids,t(sur) )) + labs(x="t",y="S(t)")
 
+  if(diagnosis == TRUE){
+    ####################### model diagnosis with logistic distribution ############################
+    epsl <- log(as.vector(t(as.matrix(gama))%*%Il)) + iv%*%bt
+    epsr <- log(as.vector(t(as.matrix(gama))%*%Ir)) + iv%*%bt
+
+    library(icenReg)
+    estR <- ic_np(cbind(epsl,epsr))
+    diplot <- plot(estR,ylab = "Survival function",xlab = "v")
+    curve(1-plogis(x,0,1),add = TRUE,col = "red")
+    legend(min(c(epsl,epsr)),0.2,legend = c('S(v)','S(v)_hat'), col = c('red','black'))
+    A <- getSCurves(estR)
+
+    jps <- c(A$Tbull_ints[,1],A$Tbull_ints[,2])
+    st1 <- A$S_curves$baseline[findInterval(jps,A$Tbull_ints[,1])]
+    st2 <- A$S_curves$baseline[findInterval(jps,A$Tbull_ints[,1])-1]
+    xx1 = (1-plogis(jps)) - st1
+    xx2 = (1-plogis(jps))- st2
+    STATISTIC <-  max(abs(c(xx1,xx2)))
+  }else{
+    STATISTIC = NULL
+    diplot = NULL
+  }
+
   #Return the result
-  list(beta = bt,beta_se = se_theta, CI = ci, spline_coef = gama, knots = knots, AIC = AIC, BIC = BIC, Baseline_Surv = bsl_surv, Baseline_hazard = bsl_hz, Baseline_odds = bsl_odds )
+  list(coefficient_est = as.data.frame(cbind(bt,se_theta,ci),row.names = colnames(x)), spline_coef = gama, knots = knots, AIC = AIC, BIC = BIC, SK_Statistic = STATISTIC, Baseline_Surv = bsl_surv, Baseline_hazard = bsl_hz, Baseline_odds = bsl_odds )
 
 }
 

@@ -8,7 +8,7 @@ Regression analysis of arbitrarily censored data under the proportional odds mod
 Fits the semi-parametric maximum likelihood estimator for univariate arbitrarily censored data using EM algorithm.
 }
 \usage{
-sp_fit <- function(L,R,x,order = 3,equal_space = T, nknot,myknots, conv_cri = 1e-8)
+sp_fit(L,R,x,order = 3,equal_space = T, nknot,myknots, conv_cri = 1e-8)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -19,6 +19,7 @@ sp_fit <- function(L,R,x,order = 3,equal_space = T, nknot,myknots, conv_cri = 1e
   \item{equal_space}{Logical, if TRUE knots are placed evenly across the observed intervals based on the input data set; if FALSE knots should be specified by the user. see myknots. The default is TRUE.}
   \item{nknot}{The total number of knots.}
   \item{myknots}{Knots specified by the user.}
+  \item{diagnosis}{Logical, if TRUE the Kolmogorov–Smirnov test (K–S test or KS test) goodness of fit will be performed. A diagnostic plot and test statistic will be returned. The default is TRUE}
   \item{conv_cri}{The convergence criterion of the EM algorithm.}
 }
 \details{
@@ -35,6 +36,7 @@ The EM algorithm converges when the sum of square of the difference in the param
 \item{knots}{The knots for I-spline.}
 \item{AIC}{The Akaike information criterion. }
 \item{BIC}{The Bayesian information criterion.}
+\item{SK_Statistic}{The test statistic for the KS-test.}
 \item{Baseline_Surv}{Plot of the estimated baseline survival curve.}
 \item{Baseline_hazard}{Plot of the estimated baseline hazard rate curve.}
 \item{Baseline_odds}{Plot of the estimated baseline odds curve.}
