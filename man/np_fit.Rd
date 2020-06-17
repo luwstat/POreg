@@ -59,4 +59,4 @@ np_fit(marijuana[,1],marijuana[,2],nknot = 10)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ }% use one of  RShowDoc("KEYWORDS")
-\keyword{ }% __ONLY ONE__ keyword per line
+\keyword{ }% ONLY ONE keyword per line
