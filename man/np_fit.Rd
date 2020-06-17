@@ -18,6 +18,7 @@ np_fit(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9)
   \item{equal_space}{Logical, if TRUE knots are placed evenly across the observed intervals based on the input data set; if FALSE knots should be specified by the user. see myknots. The default is TRUE.}
   \item{nknot}{The total number of knots.}
   \item{myknots}{Knots specified by the user.}
+  \item{diagnosis}{Logical, if TRUE a diagnostic plot for the PO model and the ks-statistics will be returned; if FALSE Null will be returned. The default is TRUE.}
   \item{conv_cri}{The convergence criterion of the EM algorithm.}
 }
 \details{
