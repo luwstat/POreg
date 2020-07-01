@@ -8,7 +8,7 @@ Regression analysis of arbitrarily censored data under the proportional odds mod
 Fits the semi-parametric maximum likelihood estimator for univariate arbitrarily censored data using EM algorithm.
 }
 \usage{
-sp_fit(L,R,x,order = 3,equal_space = T, nknot,myknots, conv_cri = 1e-8)
+sp_fit(L,R,x,order = 3,equal_space = T, nknot,myknots,diagnosis = TRUE,conv_cri = 1e-8)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

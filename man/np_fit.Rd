@@ -8,7 +8,7 @@ Non-parametric estimator for arbitrarily censored data under the proportional od
 Fits the non-parametric maximum likelihood estimator (NPMLE) for univariate arbitrarily censored data using I-spline.
 }
 \usage{
-np_fit(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9)
+np_fit(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9,diagnosis = TRUE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -18,8 +18,8 @@ np_fit(L,R,order = 3,equal_space = T,nknot, myknots,conv_cri = 1e-9)
   \item{equal_space}{Logical, if TRUE knots are placed evenly across the observed intervals based on the input data set; if FALSE knots should be specified by the user. see myknots. The default is TRUE.}
   \item{nknot}{The total number of knots.}
   \item{myknots}{Knots specified by the user.}
-  \item{diagnosis}{Logical, if TRUE a diagnostic plot for the PO model and the ks-statistics will be returned; if FALSE Null will be returned. The default is TRUE.}
   \item{conv_cri}{The convergence criterion of the EM algorithm.}
+  \item{diagnosis}{Logical, if TRUE the Kolmogorov–Smirnov test (K–S test or KS test) goodness of fit will be performed. A diagnostic plot and test statistic will be returned. The default is TRUE}
 }
 \details{
 L and R are left and right ends of the censoring interval. This allows for left censored (L == 0), right censored (R == inf), uncensored (L == R) along with interval censored observations (0 < L < R < inf).
@@ -59,4 +59,4 @@ np_fit(marijuana[,1],marijuana[,2],nknot = 10)
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 \keyword{ }% use one of  RShowDoc("KEYWORDS")
-\keyword{ }% ONLY ONE keyword per line
+\keyword{ }% __ONLY ONE__ keyword per line
